@@ -112,17 +112,6 @@ function getDinoObject() {
   return dinoArray;
 }
 
-const dinos = getDinoObject().map(
-  (dino) =>
-    new Dino(
-      dino.species,
-      dino.diet,
-      dino.where,
-      dino.when,
-      dino.fact,
-      dino.image
-    )
-);
 // Create Human Object
 
 class Human {
