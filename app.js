@@ -129,14 +129,14 @@ const human = new Human();
 
 const getHumanData = (function () {
   function humanData() {
-    human.name = document.getElementById("name").value;
+    human.species = document.getElementById("name").value;
     human.height =
-      parseInt(document.getElementById("feet").value) * 12 +
-      parseInt(document.getElementById("inches").value);
-    human.weight = parseInt(document.getElementById("weight").value);
-    human.diet = parseInt(document.getElementById("diet").value);
+      Number(document.getElementById("feet").value) * 12 +
+      Number(document.getElementById("inches").value);
+    human.weight = Number(document.getElementById("weight").value);
+    human.diet = Number(document.getElementById("diet").value);
   }
-  return { human: humanData };
+  return { human: humanData() };
 })();
 // Create Dino Compare Method 1
 // NOTE: Weight in JSON file is in lbs, height in inches.
@@ -169,6 +169,7 @@ function heightCompare(dinosaur) {
 // Create Dino Compare Method 3
 // NOTE: Weight in JSON file is in lbs, height in inches.
 function dietCompare(dinosaur) {
+  console.log(human);
   if (dinosaur.diet === human.diet.toLowerCase()) {
     return `You and ${dinosaur.species} share the same diet as a ${dinosaur.diet}`;
   } else {
@@ -212,32 +213,31 @@ function generateTiles(object) {
 
       const tile = document.createElement("div");
       tile.classList.add("grid-item");
-      tile.innterHTML = `<h3>${
+      tile.innerHTML = `<h3>${object.species}</h3>
+      <img src="images/${object.species.toLowerCase()}.png" alt="${
         object.species
-      }</h3><img src="images/${object.species.toLowerCase()}.png" alt="${
-        object.species
-      }"><p>${fact}</p>`;
+      }">
+      <p>${fact}</p>`;
       return tile;
   }
 }
 // Creating grid for the human object
-function generateHumanTile(human) {
+function generateHumanTile() {
   const humanTile = document.createElement("div");
   humanTile.classList.add("grid-item");
-  humanTile.innerHTML = `<h3>${human.name}</h3><img src="images/human.png" alt="${human.species}"><p>`;
+  humanTile.innerHTML = `<div><h3>${human.name}</h3><img src="images/human.png" alt="${human.species}"></div>`;
   return humanTile;
 }
 
 //Add tiles to DOM
 function addTiles() {
-  // Creating framgment to attach
-  getHumanData.human();
+  getHumanData.human;
   const grid = document.getElementById("grid");
   const array = getDinoObject();
-
-  for (let i = 0; i < 9; i++) {
+  console.log(human);
+  for (let i = 0; i < array.length; i++) {
     if (i === 4) {
-      grid.appendChild(generateHumanTile(human));
+      grid.appendChild(generateHumanTile());
     }
     grid.appendChild(generateTiles(array[i]));
     //attach grid elemts to the DOM
