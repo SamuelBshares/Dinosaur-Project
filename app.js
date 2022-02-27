@@ -116,8 +116,8 @@ const dino = new Dino();
 // Create Human Object
 
 class Human {
-  constructor(name, height, weight, diet) {
-    this.species = name;
+  constructor(species, height, weight, diet) {
+    this.species = species;
     this.height = height;
     this.weight = weight;
     this.diet = diet;
@@ -127,87 +127,96 @@ class Human {
 // Use IIFE to get human data from form
 
 const humanData = (function () {
-  const name = document.getElementById("name").value;
+  const species = document.getElementById("name").value;
   const height =
-    Number.parseFloat(document.getElementById("feet").value) * 12 +
-    Number.parseFloat(document.getElementById("inches").value);
-  const weight = Number.parseFloat(document.getElementById("weight").value);
+    Number(document.getElementById("feet").value) * 12 +
+    Number(document.getElementById("inches").value);
+  const weight = Number(document.getElementById("weight").value);
   const diet = document.getElementById("diet").value;
 
-  let human = new Human(name, height, weight, diet);
+  let human = new Human(species, height, weight, diet);
 
   return human;
 })();
 let human = humanData;
+
 // Create Dino Compare Method 1
 // NOTE: Weight in JSON file is in lbs, height in inches.
-
+// Comparing the weights
 Dino.prototype.weightCompare = function () {
-  const difference = Math.round(dino.weight - human.weight);
+  const difference = Math.round(this.weight - human.weight);
 
-  if (dino.weight > human.weight) {
-    return `${dino.species} is ${difference}lbs heavier than you`;
-  } else if ((dino.weight = human.weight)) {
-    return `You are as heavy as ${dino.species}`;
+  if (this.weight > human.weight) {
+    return `${this.species} is ${difference}lbs heavier than you`;
+  } else if ((this.weight = human.weight)) {
+    return `You are as heavy as ${this.species}`;
   } else {
-    return `You are ${difference}lbs heavier than a ${dino.species}`;
+    return `You are ${difference}lbs heavier than a ${this.species}`;
   }
 };
 
-// Create Dino Compare Method 2
-// NOTE: Weight in JSON file is in lbs, height in inches.
+//Comparing the heights
 Dino.prototype.heightCompare = function () {
-  const InchesDifference = Math.floor((dino.height - human.weight) % 12);
+  //InchesDifference converted in inches with the modulo
+  const InchesDifference = Math.floor((this.height - human.weight) % 12);
 
-  if (dino.height > human.height) {
-    return `${dino.species} is ${InchesDifference} Inches taller than you`;
-  } else if ((dino.height = human.height)) {
-    return `You are as tall as ${dino.species}`;
+  if (this.height > human.height) {
+    return `${this.species} is ${InchesDifference} Inches taller than you`;
+  } else if ((this.height = human.height)) {
+    return `You are as tall as ${this.species}`;
   } else {
-    return `You are ${InchesDifference} Inches taller than a ${dino.species}`;
+    return `You are ${InchesDifference} Inches taller than a ${this.species}`;
   }
 };
-// Create Dino Compare Method 3
-// NOTE: Weight in JSON file is in lbs, height in inches.
+//Comparing the diets
 Dino.prototype.dietCompare = function () {
-  if (dino.diet === human.diet.toLowerCase()) {
-    return `You and ${dino.species} share the same diet as a ${dino.diet}`;
+  if (this.diet === human.diet.toLowerCase()) {
+    return `You and ${this.species} share the same diet as a ${this.diet}`;
   } else {
-    return `${dino.species} is a ${dino.diet}`;
+    return `${this.species} is a ${this.diet}`;
   }
 };
+//Facts where the dinosaurs lived
 Dino.prototype.factWhere = function () {
-  return `The ${dino.species} lived in ${dino.where}.`;
+  return `The ${this.species} lived in ${this.where}.`;
 };
 
+//Facts when the dinosaurs lived
 Dino.prototype.factWhen = function () {
-  return `The ${dino.species} lived in the ${dino.when} period.`;
+  return `The ${this.species} lived in the ${this.when} period.`;
 };
 
+//Generating a function to randomly pick a fact function out of 5
 Dino.prototype.factGenerator = function () {
+  //generates a number between 0 and 5
   const numberGenerator = Math.round(Math.random() * 5);
-
+  // Random number equals the case number
   switch (numberGenerator) {
     case 0:
-      return dino.fact;
+      return this.fact;
     case 1:
-      return dino.factWhere();
+      return this.factWhere();
     case 2:
-      return dino.factWhen();
+      return this.factWhen();
     case 3:
-      return dino.heightCompare();
+      return this.heightCompare();
     case 4:
-      return dino.weightCompare();
+      return this.weightCompare();
     case 5:
-      return dino.dietCompare();
+      return this.dietCompare();
   }
 };
+
+//Creates the grid
 function gridCreation() {
+  //removes the form table
   (function remove() {
     form.style.display = "none";
   })();
 
+  //Creates the dinosaur tiles
   (function addTiles() {
+    // Array of Dino Objets
     let dinos = getDinoObject();
 
     dinos.forEach((dinosaur) => {
@@ -222,7 +231,10 @@ function gridCreation() {
       dino.weight = dinosaur.weight;
       dino.diet = dinosaur.diet;
       dino.fact = dinosaur.fact;
+      dino.where = dinosaur.where;
+      dino.when = dinosaur.when;
 
+      // Excpetions for Pigeon fact and adds the human into grid
       if (dino.species === "Pigeon") {
         fact.innerHTML = dinosaur.fact;
         image.setAttribute(
@@ -230,7 +242,7 @@ function gridCreation() {
           `images/${dinosaur.species.toLowerCase()}.png`
         );
       } else if (dinosaur instanceof Human) {
-        fact.innerHTML = human.species;
+        fact.innerHTML = `${human.species}`;
         image.setAttribute("src", "/images/human.png");
       } else {
         fact.innerHTML = dinosaur.factGenerator();
